@@ -1,27 +1,45 @@
 {
   "name": "cucumber-reports",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test:unit": "vitest",
+    "test:acceptance": "node --import @cucumber/node/bootstrap --import tsx --test \"features/**/*.feature\""
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.731.1",
+    "@aws-sdk/s3-request-presigner": "^3.731.1",
+    "@cucumber/messages": "^27.0.2",
+    "@cucumber/react-components": "^22.3.0",
+    "@tanstack/react-query": "^5.64.2",
+    "next": "15.2.3",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "next": "15.1.5"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
+    "@cucumber/node": "^0.4.0",
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4.0.15",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.2.0",
+    "@types/node": "^22.0.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
+    "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9",
-    "eslint-config-next": "15.1.5",
-    "@eslint/eslintrc": "^3"
+    "eslint-config-next": "15.2.3",
+    "jsdom": "^26.0.0",
+    "postcss": "^8",
+    "puppeteer": "^24.4.0",
+    "sass": "^1.83.4",
+    "tailwindcss": "^4.0.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.0.9"
   }
 }
