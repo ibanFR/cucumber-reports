@@ -1,10 +1,12 @@
 import { Browser, launch } from 'puppeteer'
 import { ActorLookup } from './ActorLookup.mjs'
 import { Actor } from './Actor.mjs'
+import { PublishResult } from '../actions/types'
 
 export class CustomWorld {
   private readonly actorLookup = new ActorLookup()
   private browser: Browser | undefined
+  public publishResults: Array<PublishResult> = []
 
   public findOrCreateActor(actorName: string): Actor {
     return this.actorLookup.findOrCreateActor(this, actorName)

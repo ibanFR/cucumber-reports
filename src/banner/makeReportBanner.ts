@@ -1,6 +1,6 @@
 import { banner, Modifier } from './banner'
 
-export function makeBanner(reportUrl: string): string {
+export function makeReportBanner(reportUrl: string): string {
   return banner(
     [
       'View your Cucumber Report at:',

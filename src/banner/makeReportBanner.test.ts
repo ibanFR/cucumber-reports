@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { makeBanner } from './makeBanner'
+import { makeReportBanner } from './makeReportBanner'
 import { stripVTControlCharacters } from 'node:util'
 
-describe('makeBanner', () => {
+describe('makeReportBanner', () => {
   it('returns a banner with the report URL', () => {
-    expect(stripVTControlCharacters(makeBanner('https://reports.cucumber.io/report/123'))).toMatchInlineSnapshot(`
+    expect(stripVTControlCharacters(makeReportBanner('https://reports.cucumber.io/report/123'))).toMatchInlineSnapshot(`
       "┌────────────────────────────────────────┐
       │ View your Cucumber Report at:          │
       │ https://reports.cucumber.io/report/123 │
