@@ -15,7 +15,9 @@ export default function RootLayout({ children }: Readonly<{
     <html lang="en">
     <body className={`${textFont.variable} ${monoFont.variable} antialiased`}>
     <Masthead />
-    {children}
+    <main className="p-8 mx-auto max-w-7xl">
+      {children}
+    </main>
     </body>
     </html>
   )

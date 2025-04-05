@@ -9,5 +9,6 @@ export interface RetrievedObject {
 
 export interface EnvelopesStore {
   touch: () => Promise<EmptyObject>
-  retrieve: (id: string) => Promise<RetrievedObject>
+  retrieve: (id: string) => Promise<RetrievedObject | undefined>
+  delete: (id: string) => Promise<void>
 }

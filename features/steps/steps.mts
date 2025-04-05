@@ -6,9 +6,21 @@ import assert from 'node:assert'
 import crypto from 'node:crypto'
 import { canAccessResults } from '../actions/canAccessResults.mjs'
 import { PublishResult } from '../actions/types'
+import { isScheduledForDeletion } from '../actions/isScheduledForDeletion.mjs'
+import { deleteReport } from '../actions/deleteReport.mjs'
+import { wasDeleted } from '../actions/wasDeleted.mjs'
+import { wasNotFound } from '../actions/wasNotFound.mjs'
 
 Given('{actor} has a private token', async (t, actor: Actor) => {
   actor.remember('privateToken', crypto.randomBytes(16).toString('hex'));
+})
+
+Given('a report previously published by {actor} has been deleted', async (t, actor: Actor) => {
+  actor.remember('publishResult', {
+    success: true,
+    banner: 'Report published',
+    url: `http://localhost:3000/reports/${crypto.randomUUID()}`,
+  })
 })
 
 When('{actor} publishes a report', async (t, actor: Actor) => {
@@ -22,8 +34,21 @@ When('{actor} views the report they just published', async (t, actor: Actor) => 
   actor.remember('page', page)
 })
 
+When('{actor} attempts to view their report', async (t, actor: Actor) => {
+  const page = await actor.attemptsTo(retrieveReport(actor.recall('publishResult')))
+  actor.remember('page', page)
+})
+
+When('{actor} deletes the report', async (t, actor: Actor) => {
+  await actor.attemptsTo(deleteReport(actor.recall('page')))
+})
+
 Then('{actor} should see their test results', async (t, actor: Actor) => {
   assert.ok(await actor.ask(canAccessResults(actor.recall('page'))))
+})
+
+Then('{actor} should see that the report is scheduled for deletion', async (t, actor: Actor) => {
+  assert.ok(await actor.ask(isScheduledForDeletion(actor.recall('page'))))
 })
 
 Then('{actor} should see the message:', async (t, actor: Actor, expectedBanner: string) => {
@@ -32,4 +57,12 @@ Then('{actor} should see the message:', async (t, actor: Actor, expectedBanner: 
 
 Then('no report should be published', async (t) => {
   assert.ok(t.world.publishResults.every((publishResult: PublishResult) => !publishResult.success))
+})
+
+Then('{actor} should see that the report was deleted', async (t, actor: Actor) => {
+  assert.ok(await actor.ask(wasDeleted(actor.recall('page'))))
+})
+
+Then('{actor} should see that no report was found', async (t, actor: Actor) => {
+  assert.ok(await actor.ask(wasNotFound(actor.recall('page'))))
 })

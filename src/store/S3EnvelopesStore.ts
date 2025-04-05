@@ -19,25 +19,42 @@ export class S3EnvelopesStore implements EnvelopesStore {
   async touch(): Promise<EmptyObject> {
     const id = randomUUID()
 
-    const rawPutUrl = await getSignedUrl(this.s3, new PutObjectCommand({
+    const putUrl = await getSignedUrl(this.s3, new PutObjectCommand({
       Bucket: S3_BUCKET_NAME,
       Key: id,
     }), { expiresIn: 3600 })
-    const putUrl = new URL(rawPutUrl)
 
     return {
       id,
-      putUrl: putUrl.toString(),
+      putUrl,
     }
   }
 
-  async retrieve(id: string): Promise<RetrievedObject> {
+  async retrieve(id: string): Promise<RetrievedObject | undefined> {
+    try {
+      await this.s3.headObject({
+        Bucket: S3_BUCKET_NAME,
+        Key: id,
+      })
+    } catch (e) {
+      console.info(`Failed to retrieve report ${id} from S3`, e)
+      return undefined
+    }
+
     const getUrl = await getSignedUrl(this.s3, new GetObjectCommand({
       Bucket: S3_BUCKET_NAME,
       Key: id,
     }), { expiresIn: 60 })
+
     return {
       getUrl,
     }
+  }
+
+  async delete(id: string): Promise<void> {
+   await this.s3.deleteObject({
+     Bucket: S3_BUCKET_NAME,
+     Key: id,
+   })
   }
 }
