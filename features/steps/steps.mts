@@ -29,8 +29,18 @@ When('{actor} publishes a report', async (t, actor: Actor) => {
   t.world.publishResults.push(publishResult)
 })
 
+When('{actor} shares their link with {actor}', async (t, publisher: Actor, receipient: Actor) => {
+  const publishResult = publisher.recall<PublishResult>('publishResult')
+  receipient.remember('sharedUrl', publishResult.url)
+})
+
 When('{actor} views the report they just published', async (t, actor: Actor) => {
   const page = await actor.attemptsTo(retrieveReport(actor.recall('publishResult')))
+  actor.remember('page', page)
+})
+
+When('{actor} views the shared report', async (t, actor: Actor) => {
+  const page = await actor.attemptsTo(retrieveReport(actor.recall('sharedUrl')))
   actor.remember('page', page)
 })
 
@@ -43,7 +53,7 @@ When('{actor} deletes the report', async (t, actor: Actor) => {
   await actor.attemptsTo(deleteReport(actor.recall('page')))
 })
 
-Then('{actor} should see their test results', async (t, actor: Actor) => {
+Then('{actor} should see the(ir) test results', async (t, actor: Actor) => {
   assert.ok(await actor.ask(canAccessResults(actor.recall('page'))))
 })
 
