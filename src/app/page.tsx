@@ -5,6 +5,7 @@ import { Ruby } from '@/components/icons/Ruby'
 import { Jvm } from '@/components/icons/Jvm'
 import { NodeJs } from '@/components/icons/NodeJs'
 import { FakeTerminal } from '@/components/FakeTerminal'
+import Link from 'next/link'
 
 export default async function Page({ searchParams }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
@@ -65,6 +66,10 @@ export default async function Page({ searchParams }: {
               <FakeTerminal><span className="text-slate-400">$</span> cucumber-js --publish</FakeTerminal>
             </div>
           </div>
+        </section>
+
+        <section className="my-8">
+          <p className="text-xl text-center">Got questions? <Link className="underline" href="/faqs">See the FAQs</Link>.</p>
         </section>
       </div>
     </main>
