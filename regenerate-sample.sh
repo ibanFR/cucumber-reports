@@ -1,0 +1,1 @@
+node --import @cucumber/node/bootstrap --import tsx --test-reporter=spec --test-reporter-destination=stdout --test-reporter=@cucumber/node/reporters/message --test-reporter-destination=./public/sample-envelopes.ndjson --test "features/**/*.feature"

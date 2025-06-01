@@ -2,7 +2,8 @@
 
 import { useEnvelopes } from '@/hooks/useEnvelopes'
 import { FC } from 'react'
-import { Results } from '@/components/Results'
+import { EnvelopesProvider, UrlSearchProvider } from '@cucumber/react-components'
+import { FilteredResults } from './FilteredResults'
 
 type Props = {
   id: string
@@ -10,9 +11,15 @@ type Props = {
 }
 
 export const Report: FC<Props> = ({ id, getUrl }) => {
-  const { data } = useEnvelopes(id, getUrl)
-  if (!data) {
+  const { data: envelopes } = useEnvelopes(id, getUrl)
+  if (!envelopes) {
     return null
   }
-  return <Results envelopes={data} />
+  return <div data-testid="report">
+    <EnvelopesProvider envelopes={envelopes}>
+      <UrlSearchProvider>
+        <FilteredResults />
+      </UrlSearchProvider>
+    </EnvelopesProvider>
+  </div>
 }

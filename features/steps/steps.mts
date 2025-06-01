@@ -4,12 +4,14 @@ import { Actor } from '../support/Actor.mjs'
 import { retrieveReport } from '../actions/retrieveReport.mjs'
 import assert from 'node:assert'
 import crypto from 'node:crypto'
-import { canAccessResults } from '../actions/canAccessResults.mjs'
+import { canSeeResults } from '../actions/canSeeResults.mjs'
 import { PublishResult } from '../actions/types'
 import { isScheduledForDeletion } from '../actions/isScheduledForDeletion.mjs'
 import { deleteReport } from '../actions/deleteReport.mjs'
 import { wasDeleted } from '../actions/wasDeleted.mjs'
 import { wasNotFound } from '../actions/wasNotFound.mjs'
+import { navigateToSite } from '../actions/navigateToSite.mjs'
+import { canSeeSample } from '../actions/canSeeSample.mjs'
 
 Given('{actor} has a private token', async (t, actor: Actor) => {
   actor.remember('privateToken', crypto.randomBytes(16).toString('hex'));
@@ -53,8 +55,17 @@ When('{actor} deletes the report', async (t, actor: Actor) => {
   await actor.attemptsTo(deleteReport(actor.recall('page')))
 })
 
+When('{actor} accesses the site directly', async (t, actor: Actor) => {
+  const page = await actor.attemptsTo(navigateToSite())
+  actor.remember('page', page)
+})
+
+Then('{actor} should see a sample report', async (t, actor: Actor) => {
+  assert.ok(await actor.ask(canSeeSample(actor.recall('page'))))
+})
+
 Then('{actor} should see the(ir) test results', async (t, actor: Actor) => {
-  assert.ok(await actor.ask(canAccessResults(actor.recall('page'))))
+  assert.ok(await actor.ask(canSeeResults(actor.recall('page'))))
 })
 
 Then('{actor} should see that the report is scheduled for deletion', async (t, actor: Actor) => {

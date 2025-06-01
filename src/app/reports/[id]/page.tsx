@@ -7,24 +7,28 @@ export default async function Page({ params }: {
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const retrieved  = await envelopesStore.retrieve(id)
+  const retrieved = await envelopesStore.retrieve(id)
   if (!retrieved) {
-    return <div className="text-center">
-      <h1 className="text-3xl font-bold">No report found</h1>
-      <p>It might have expired, or been deleted.</p>
-    </div>
+    return <main className="flex-grow w-full max-w-7xl p-8 mx-auto">
+      <div className="text-center">
+        <h1 className="text-3xl font-bold">No report found</h1>
+        <p>It might have expired, or been deleted.</p>
+      </div>
+    </main>
   }
 
   const deleteReportWithId = deleteReport.bind(null, id)
-  return <>
+  return <main className="flex-grow w-full max-w-7xl p-8 mx-auto">
     <header className="text-center mb-8">
       <h1 className="text-3xl font-bold">Your report</h1>
-      <p>It will be automatically deleted after 24 hours. <button onClick={deleteReportWithId} className="bg-red-700 text-white text-sm px-2 py-1 rounded-sm ml-1 cursor-pointer">Delete it now</button></p>
+      <p>It will be automatically deleted after 24 hours. <button onClick={deleteReportWithId}
+                                                                  className="bg-red-700 text-white text-sm px-2 py-1 rounded-sm ml-1 cursor-pointer">Delete
+        it now</button></p>
     </header>
     <article>
       <ClientWrapper>
         <Report id={id} getUrl={retrieved.getUrl} />
       </ClientWrapper>
     </article>
-  </>
+  </main>
 }
