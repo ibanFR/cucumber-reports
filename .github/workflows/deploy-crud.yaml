@@ -22,8 +22,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - run: sudo apt-get update && sudo apt-get install -y zip
       - run: zip -j function.zip *.mjs
-        working-directory: ./functions/fetch
+        working-directory: ./functions/crud
       - run: |
           aws lambda update-function-code \
-            --function-name cucumber-reports-fetch-prod \
-            --zip-file fileb://$(pwd)/functions/fetch/function.zip
+            --function-name cucumber-reports-crud-prod \
+            --zip-file fileb://$(pwd)/functions/crud/function.zip
