@@ -1,4 +1,4 @@
-import { World } from '@cucumber/node'
+import { type World } from '@cucumber/node'
 
 export type Action<Answer = void> = (actor: Actor) => Promise<Answer> | Answer
 export type DefaultFunction<T> = () => T
@@ -8,10 +8,7 @@ export class Actor {
   public readonly world: World
   public readonly name: string
 
-  constructor(
-    world: World,
-    name: string,
-  ) {
+  constructor(world: World, name: string) {
     this.world = world
     this.name = name
   }

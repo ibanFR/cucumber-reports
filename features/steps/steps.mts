@@ -5,7 +5,7 @@ import { retrieveReport } from '../actions/retrieveReport.mjs'
 import assert from 'node:assert'
 import crypto from 'node:crypto'
 import { canSeeResults } from '../actions/canSeeResults.mjs'
-import { PublishResult } from '../actions/types'
+import { type PublishResult } from '../actions/types'
 import { isScheduledForDeletion } from '../actions/isScheduledForDeletion.mjs'
 import { deleteReport } from '../actions/deleteReport.mjs'
 import { wasDeleted } from '../actions/wasDeleted.mjs'
@@ -18,19 +18,21 @@ Given('a Cucumber implementation that omits some fields', async (t) => {
 })
 
 Given('{actor} has a private token', async (t, actor: Actor) => {
-  actor.remember('privateToken', crypto.randomBytes(16).toString('hex'));
+  actor.remember('privateToken', crypto.randomBytes(16).toString('hex'))
 })
 
 Given('a report previously published by {actor} has been deleted', async (t, actor: Actor) => {
   actor.remember('publishResult', {
     success: true,
     banner: 'Report published',
-    url: `http://localhost:3000/reports/${crypto.randomUUID()}`,
+    url: `http://localhost:5173/reports/${crypto.randomUUID()}`,
   })
 })
 
 When('{actor} publishes a report', async (t, actor: Actor) => {
-  const publishResult = await actor.attemptsTo(publishReport(t.world.messagesFixture, actor.recall('privateToken')))
+  const publishResult = await actor.attemptsTo(
+    publishReport(t.world.messagesFixture, actor.recall('privateToken'))
+  )
   actor.remember('publishResult', publishResult)
   t.world.publishResults.push(publishResult)
 })
@@ -77,7 +79,10 @@ Then('{actor} should see that the report is scheduled for deletion', async (t, a
 })
 
 Then('{actor} should see the message:', async (t, actor: Actor, expectedBanner: string) => {
-  assert.strictEqual(actor.recall<PublishResult>('publishResult').banner.trim(), expectedBanner.trim())
+  assert.strictEqual(
+    actor.recall<PublishResult>('publishResult').banner.trim(),
+    expectedBanner.trim()
+  )
 })
 
 Then('no report should be published', async (t) => {
